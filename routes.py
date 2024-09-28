@@ -1,11 +1,18 @@
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, jsonify
+import json
 from app import app
 import users
+import restaurants
 
 @app.route("/")
 def index():
     userlist = users.all_users()
     return render_template("index.html", count=len(userlist), users=userlist)
+
+@app.route("/map")
+def map():
+    return render_template("map.html")
+
 
 @app.route("/login", methods=["POST"])
 def login():
