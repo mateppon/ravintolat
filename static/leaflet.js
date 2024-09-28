@@ -5,5 +5,11 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 
+var _geocoderType = L.Control.Geocoder.nominatim();
+var geocoder = L.Control.geocoder({
+    geocoder: _geocoderType
+}).addTo(map);
+
+
 
 
