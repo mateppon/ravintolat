@@ -1,6 +1,6 @@
 	CREATE TABLE users(
 		id SERIAL PRIMARY KEY, 
-		name TEXT,
+		name TEXT UNIQUE,
 		password TEXT,
 		role INTEGER
 
@@ -9,7 +9,7 @@
 	CREATE TABLE restaurants (
 		id SERIAL PRIMARY KEY,
 		creator_id INTEGER REFERENCES users,
-		name TEXT,
+		name TEXT UNIQUE,
 		info TEXT,
 		visible BOOLEAN
 	);
@@ -17,9 +17,7 @@
 	CREATE TABLE addresses(
 		id SERIAL PRIMARY KEY,
 		restaurant_id INTEGER REFERENCES restaurants,
-		street TEXT,
-		street_number INTEGER,
-		city TEXT
+		coordinates TEXT
 	);
 
 	CREATE TABLE reviews(
@@ -33,7 +31,7 @@
 
 	CREATE TABLE groups(
 		id SERIAL PRIMARY KEY,
-		group_name TEXT,
+		group_name TEXT UNIQUE,
 		creator_id INTEGER REFERENCES users,
-		resutaurant_id INTEGER REFERENCES restaurants
+		restaurant_id INTEGER REFERENCES restaurants
 	); 
