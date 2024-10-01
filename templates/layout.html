@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ravintolat kartalla - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar-expand-lg navbar-dark bg-dark">
+
+            <div class="container-fluid border text-white ">
+                <div class="row align-items-start">
+                    <div class="col-auto mr-auto my-3" >
+                        <h2>Ravintolat kartalla</h2>
+                    </div>
+
+                    <div class="col-auto my-3" >
+                        {% if session.name %}
+                        <p>Olet kirjautunut nimellä {{ session.name }}</p>
+                        <a href="/logout">Kirjaudu ulos</a>
+                        {% else %}
+                        <form action="/login" method="POST">
+                            <p>Käyttäjätunnus:
+                                <input type="text" name="name">
+                                Salasana:
+                                <input type="password" name="password">
+                                <input type="submit" value="Kirjaudu">
+                            </p>
+                        </form>
+                        <a href="/register">Rekisteröi uusi käyttäjä</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="my-5">
+
+        {% block content %}{% endblock %}
+
+        <div class="container-fluid border">
+            <div class="row align-items-end">
+                <a class= "text-dark" href="/">Palaa etusivulle</a>
+            </div>
+        </div>
+    </main>
+</body>
