@@ -1,42 +1,67 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='leaflet.css') }}" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='leaflet.css') }}" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% extends "layout.html" %}
+</head>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+{% block title %}Lisää ravintola{% endblock %}
 
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
-<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<body>
-    <div>
-        <div id="map"></div>
-        <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
-
-        <div id="info">
-            <h3>Syötä lisättävän ravintolan tiedot</h3>
-            <form action="/login" method="POST">
-                <p>Ravintolan nimi:<br>
-                    <input type="text" name="name">
-                </p>
-                <p>
-                    Anna lyhyt kuvaus ravintolasta: <br>
-                    <textarea name="message" rows="5" cols="40"> </textarea> <br>
-                </p>
-                <input type="submit" value="Lisää ravintola">
+{% block content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h3>Lisää uuden ravintolan tiedot</h3>
+            <form class="was-validated" action="/coordinates" method="POST">
+                <div class="mb-3">
+                    <label for="validationServer01">Ravintolan nimi</label>
+                    <input type="text" class="form-control is-valid" id="validationServer01"
+                        placeholder="Kirjoita ravintolan nimi" required>
+                    <div class="invalid-feedback">
+                        Kirjoita ravintolan nimi
+                    </div>
+                    <div class="mb-3">
+                        <label for="validationTextarea">Kuvaus</label>
+                        <textarea class="form-control is-invalid" id="validationTextarea"
+                            placeholder="Kirjoita lyhyt kuvaus ravintolasta." required></textarea>
+                        <div class="invalid-feedback">
+                            Kirjoita kuvaus ravintolasta.
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="input-group is-invalid">
+                            <div class="input-group-prepend">
+                                <label class="input-group-text"
+                                    for="validatedInputGroupSelect">Ravintolakategoria</label>
+                            </div>
+                            <select class="custom-select" multiple size = "3" id="validatedInputGroupSelect" required>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                                <option value="4">Four</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h4>Etsi ravintola kartalta</h4>
+                    <div id="map"></div>
+                    <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                            <label class="form-check-label" for="invalidCheck2">
+                                Olen tarkastanut ravintolan tiedot ja osoitteen.
+                            </label>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-dark" type="submit">Lisää ravintola</button>
             </form>
-            <a href="/">Palaa etusivulle</a>
-            <br>
-            <br>
-
-
-
-
         </div>
-
     </div>
-</body>
+</div>
+
+{% endblock %}
