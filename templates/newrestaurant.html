@@ -17,17 +17,17 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <h3>Lisää uuden ravintolan tiedot</h3>
-            <form class="was-validated" action="/coordinates" method="POST">
+            <form class="was-validated" action="/newrestaurant" method="POST">
                 <div class="mb-3">
                     <label for="validationServer01">Ravintolan nimi</label>
-                    <input type="text" class="form-control is-valid" id="validationServer01"
+                    <input type="text" class="form-control is-valid" id="validationServer01" name="name"
                         placeholder="Kirjoita ravintolan nimi" required>
                     <div class="invalid-feedback">
                         Kirjoita ravintolan nimi
                     </div>
                     <div class="mb-3">
                         <label for="validationTextarea">Kuvaus</label>
-                        <textarea class="form-control is-invalid" id="validationTextarea"
+                        <textarea class="form-control is-invalid" id="validationTextarea" name="description"
                             placeholder="Kirjoita lyhyt kuvaus ravintolasta." required></textarea>
                         <div class="invalid-feedback">
                             Kirjoita kuvaus ravintolasta.
@@ -39,7 +39,8 @@
                                 <label class="input-group-text"
                                     for="validatedInputGroupSelect">Ravintolakategoria</label>
                             </div>
-                            <select class="custom-select" multiple size = "3" id="validatedInputGroupSelect" required>
+                            <select class="custom-select" multiple size="3" id="validatedInputGroupSelect"
+                                name="categories" required>
                                 <option value="1">One</option>
                                 <option value="2">Two</option>
                                 <option value="3">Three</option>
@@ -52,7 +53,8 @@
                     <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
                     <div class="form-group">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                            <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" name="check"
+                                required>
                             <label class="form-check-label" for="invalidCheck2">
                                 Olen tarkastanut ravintolan tiedot ja osoitteen.
                             </label>
