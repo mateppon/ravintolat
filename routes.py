@@ -15,21 +15,21 @@ def map():
         return render_template("newrestaurant.html")
 
     if request.method == "POST":
-            if request.is_json:
-                data = request.json
-                if 'center' in data:
-                  center = data['center']
-                  print(f"{center}")
-            else:
-                name = request.form["name"]
-                description= request.form["description"]
-                categories = request.form.getlist("categories")
-                print(name, description)
-                print("check" in request.form)
-                for category in categories:
-                    print(category)
 
-            return redirect("/newrestaurant")
+        if request.is_json:
+            data = request.json
+            if 'center' in data:
+                center = data['center']
+                session["address"] = center
+
+        address = session.get("address")
+        name = request.form["name"]
+        description= request.form["description"]
+        categories = request.form.getlist("categories")
+
+        restaurants.add_restaurant(name, description, categories, address)
+        return redirect("/newrestaurant")
+
 
 
 @app.route("/login", methods=["POST"])
