@@ -17,7 +17,7 @@
 	CREATE TABLE addresses(
 		id SERIAL PRIMARY KEY,
 		restaurant_id INTEGER REFERENCES restaurants,
-		coordinates TEXT
+		coordinates POINT		
 	);
 
 	CREATE TABLE reviews(
