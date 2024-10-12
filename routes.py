@@ -1,16 +1,18 @@
 from flask import redirect, render_template, request, session
-import json
 from app import app
 import users
 import restaurants
 
 @app.route("/")
 def index():
-    userlist = users.all_users()
-    return render_template("index.html", count=len(userlist), users=userlist)
+    restaurants_lst = restaurants.get_restaurants()
+
+    return render_template("index.html", markers = restaurants_lst)
+
+
 
 @app.route("/newrestaurant", methods = ["GET", "POST"])
-def map():
+def newrestaurant():
     if request.method == "GET":
         return render_template("newrestaurant.html")
 
@@ -26,6 +28,7 @@ def map():
         name = request.form["name"]
         description= request.form["description"]
         categories = request.form.getlist("categories")
+        print(address)
 
         restaurants.add_restaurant(name, description, categories, address)
         return redirect("/newrestaurant")
