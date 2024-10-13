@@ -50,12 +50,15 @@ def get_categories():
 
     sql = text("""
                SELECT
-               DISTINCT g.group_name
+               g.id
+               , g.group_name
                , u.name as username
 
                FROM groups as g
                LEFT JOIN users as u
                ON g.creator_id = u.id
+
+               ORDER BY group_name
 
                """)
     result = db.session.execute(sql)

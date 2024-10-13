@@ -31,11 +31,13 @@ def newcategory():
 def newrestaurant():
     if request.method == "GET":
 
-        categories = [
-        {'id': 1, 'text': 'Ei kategoriaa'},
-        {'id': 2, 'text': 'Italialainen'},
-        {'id': 3, 'text': 'Aasialainen'}
-        ]
+        results = restaurants.get_categories()
+        categories = []
+        for row in results:
+             result= {}
+             result["id"] = row.id
+             result["text"] = row.group_name
+             categories.append(result)
 
         return render_template("newrestaurant.html", options = categories)
 
