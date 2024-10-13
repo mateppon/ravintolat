@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block title %}Lisää uusi kategoria{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg">
+            <div class="jumbotron justify-content-center">
+                <form action="/newcategory" method="POST">
+                    <h3>Lisää uusi ravintolakategoria</h3>
+                    <p>Kategorian nimi<br>
+                        <input type="text" name="category" minlength="4" maxlength="20">
+                    </p>
+                    <input type="submit" value="Lisää kategoria">
+                </form>
+            </div>
+            <a class="text-dark" href="/newrestaurant">Lisää uusi ravintola</a>
+        </div>
+        <div class="col-lg">
+            <ul class="list-group">
+                <h4> Olemassa olevat kategoriat ja niihin kuuluvien ravintoloiden määrä:</h4>
+                <hr>
+                {% for category in categories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <dl>
+
+                        <dt>{{ category.group_name}}</dt>
+
+                        <dd>Luonut: {{category.username}}</dd>
+                    </dl>
+                    <span class="badge badge-primary badge-pill bg-secondary text-white">tähän ravintoloiden
+                        määrä</span>
+
+
+                </li>
+                {% endfor %}
+
+            </ul>
+
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col"></div>
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}

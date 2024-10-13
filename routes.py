@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session, render_template_string
+from flask import redirect, render_template, request, session
 from app import app
 import users
 import restaurants
@@ -6,9 +6,25 @@ import restaurants
 
 @app.route("/")
 def index():
-    restaurants_lst = restaurants.get_restaurants()
+    restaurants_lst = restaurants.get_top5()
 
-    return render_template("index.html", markers = restaurants_lst)
+    return render_template("index.html", restaurants = restaurants_lst)
+
+
+@app.route("/newcategory", methods = ["GET", "POST"])
+def newcategory():
+        if request.method == "GET":
+            categories = restaurants.get_categories()
+
+            return render_template("newcategory.html", categories = categories)
+
+        if request.method == "POST":
+            category = request.form["category"]
+
+            if restaurants.add_category(category) is False:
+                return render_template("error.html", message = "Kategoria on jo olemassa.")
+
+            return redirect("/newcategory")
 
 
 @app.route("/newrestaurant", methods = ["GET", "POST"])

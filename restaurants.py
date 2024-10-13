@@ -24,7 +24,7 @@ def add_restaurant(name :str, info :str, categories : list, address : str):
         return False
 
     restaurant_id = restaurant.id
-    coordinates = (address["lat"],address["lng"])
+    coordinates = f"{address['lat']},{address['lng']}"
 
     try:
         sql = text("INSERT INTO addresses (restaurant_id, coordinates) VALUES (:restaurant_id, :coordinates)")
@@ -32,13 +32,78 @@ def add_restaurant(name :str, info :str, categories : list, address : str):
         db.session.commit()
     except:
         return False
-
     return True
+
+
+def add_category(group_name : str):
+    creator_id = session.get("user_id")
+    try:
+        sql = text("INSERT INTO groups (group_name, creator_id) VALUES (:group_name, :creator_id)")
+        db.session.execute(sql, {"group_name":group_name, "creator_id":creator_id})
+        db.session.commit()
+    except:
+        return False
+    return True
+
+
+def get_categories():
+
+    sql = text("""
+               SELECT
+               DISTINCT g.group_name
+               , u.name as username
+
+               FROM groups as g
+               LEFT JOIN users as u
+               ON g.creator_id = u.id
+
+               """)
+    result = db.session.execute(sql)
+    categories = result.fetchall()
+
+    return categories
 
 
 def get_restaurants():
 
-    sql = text("SELECT rest.name, addr.coordinates FROM restaurants AS rest JOIN addresses AS addr on rest.id = addr.restaurant_id")
+    sql = text("""
+
+                SELECT
+
+                rest.name
+                , addr.coordinates
+
+                FROM restaurants AS rest
+                JOIN addresses AS addr
+                ON rest.id = addr.restaurant_id
+
+                LEFT JOIN reviews as rev
+                ON rest.id
+
+               """)
+    result = db.session.execute(sql)
+    restaurant_list= result.fetchall()
+
+    return convert_result_to_dict(restaurant_list)
+
+
+def get_top5():
+    sql = text(
+        """
+            SELECT
+
+             rest.name
+            , addr.coordinates
+
+                FROM restaurants AS rest
+                JOIN addresses AS addr
+                ON rest.id = addr.restaurant_id
+
+                LEFT JOIN reviews as rev
+                ON rest.id = rev.restaurant_id
+
+            """
+    )
     result = db.session.execute(sql)
     restaurant_list= result.fetchall()
 
