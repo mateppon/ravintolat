@@ -13,6 +13,7 @@
 {% block title %}Lisää ravintola{% endblock %}
 
 {% block content %}
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -41,14 +42,25 @@
                             </div>
                             <select class="custom-select" multiple size="3" id="validatedInputGroupSelect"
                                 name="categories" required>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                                <option value="4">Four</option>
+                                <option disabled selected>Valitse kategoria</option>
+                                <script>
+                                    function addOptions(options) {
+                                        var select = document.getElementById('validatedInputGroupSelect');
+                                        options.forEach(option => {
+                                            var opt = document.createElement('option');
+                                            opt.value = option.id;
+                                            opt.textContent = option.text;
+                                            select.appendChild(opt);
+                                        });
+                                    }
+                                    addOptions({{ options | tojson }});
+                                </script>
                             </select>
+                            <a href="/newcategory">Lisää uusi kategoria</a>
+
                         </div>
                     </div>
-                    <h4>Etsi ravintola kartalta</h4>
+                    <h4>Etsi lisättävä ravintola kartalta</h4>
                     <div id="map"></div>
                     <script src="{{ url_for('static', filename='leaflet.js') }}"></script>
                     <div class="form-group">

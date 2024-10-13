@@ -1,7 +1,8 @@
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, render_template_string
 from app import app
 import users
 import restaurants
+
 
 @app.route("/")
 def index():
@@ -10,11 +11,17 @@ def index():
     return render_template("index.html", markers = restaurants_lst)
 
 
-
 @app.route("/newrestaurant", methods = ["GET", "POST"])
 def newrestaurant():
     if request.method == "GET":
-        return render_template("newrestaurant.html")
+
+        categories = [
+        {'id': 1, 'text': 'Ei kategoriaa'},
+        {'id': 2, 'text': 'Italialainen'},
+        {'id': 3, 'text': 'Aasialainen'}
+        ]
+
+        return render_template("newrestaurant.html", options = categories)
 
     if request.method == "POST":
 
@@ -28,11 +35,9 @@ def newrestaurant():
         name = request.form["name"]
         description= request.form["description"]
         categories = request.form.getlist("categories")
-        print(address)
-
         restaurants.add_restaurant(name, description, categories, address)
-        return redirect("/newrestaurant")
 
+        return redirect("/newrestaurant")
 
 
 @app.route("/login", methods=["POST"])
@@ -49,6 +54,7 @@ def login():
             return redirect("/")
 
         return render_template("error.html", message = "Virheellinen käyttäjänimi tai salasana.")
+
 
 @app.route("/logout")
 def logout():
