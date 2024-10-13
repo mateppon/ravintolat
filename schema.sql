@@ -17,7 +17,7 @@
 	CREATE TABLE addresses(
 		id SERIAL PRIMARY KEY,
 		restaurant_id INTEGER REFERENCES restaurants,
-		coordinates POINT		
+		coordinates TEXT		
 	);
 
 	CREATE TABLE reviews(
@@ -32,6 +32,11 @@
 	CREATE TABLE groups(
 		id SERIAL PRIMARY KEY,
 		group_name TEXT UNIQUE,
-		creator_id INTEGER REFERENCES users,
-		restaurant_id INTEGER REFERENCES restaurants
+		creator_id INTEGER REFERENCES users
 	); 
+
+	CREATE TABLE restaurantsGroups(
+		id SERIAL PRIMARY KEY,
+		restauranst_id INTEGER REFERENCES restaurants,
+		group_id INTEGER REFERENCES groups
+	);
