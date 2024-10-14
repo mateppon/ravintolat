@@ -11,6 +11,13 @@ def index():
     return render_template("index.html", restaurants = restaurants_lst)
 
 
+@app.route('/restaurant/<name>')
+def place_page(name):
+    session["restaurant"] = name
+
+    return render_template("restaurant.html", name = name)
+
+
 @app.route("/newcategory", methods = ["GET", "POST"])
 def newcategory():
         if request.method == "GET":

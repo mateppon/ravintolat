@@ -2,7 +2,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='leaflet.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
@@ -14,33 +13,34 @@
 
 {% block content %}
 
-<div class= "container-fluid">
+<div class="container-fluid">
 
-    <div class = "row">
-        <div class = "col-lg-6">
-            <a class= "text-dark" href="/newrestaurant">Lisää uusi ravintola</a>
+    <div class="row">
+        <div class="col-md-6">
+            {% for restaurant in restaurants %}
+            <hr>
+            {{ restaurant['name'] }}
+            <hr>
+            {% endfor %}
         </div>
-        <div class = "col-lg-6">
+        <div class="col-md-6">
             <div id="map"></div>
             <script src="{{ url_for('static', filename='findrestaurants.js') }}"></script>
             <script>
-             {% for marker in markers %}
-             L.marker([{{ marker['lat'] }}, {{ marker['lon'] }}]).addTo(map).bindPopup("{{ marker['name'] }}").openPopup();
-             {% endfor %}
+                {% for restaurant in restaurants %}
 
+                var popup = L.popup()
+                    .setContent('<a href="/restaurant/{{restaurant['name']}}" class="restaurant-link">{{restaurant['name']}}</a>')
+
+                L.marker([{{ restaurant['lat'] }}, {{ restaurant['lon'] }}])
+                    .addTo(map)
+                    .bindPopup(popup).openPopup();
+                {% endfor %}
             </script>
-
-
         </div>
-
     </div>
-
-
-
-
+    <div class="row">
+        <a class="text-dark" href="/newrestaurant">Lisää uusi ravintola</a>
+    </div>
 </div>
-
-
-
-
 {% endblock %}
