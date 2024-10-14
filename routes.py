@@ -13,9 +13,17 @@ def index():
 
 @app.route('/restaurant/<name>')
 def place_page(name):
-    session["restaurant"] = name
+    restaurant = restaurants.get_restaurant(name)
+    categories= restaurants.get_rest_categories(name)
+    coordinates = restaurant.coordinates.split(",")
+    lat = coordinates[0]
+    lon = coordinates[1]
 
-    return render_template("restaurant.html", name = name)
+    return render_template("restaurant.html",
+                           name = name,
+                            restaurant = restaurant,
+                            categories = categories,
+                            lat = lat, lon = lon)
 
 
 @app.route("/newcategory", methods = ["GET", "POST"])

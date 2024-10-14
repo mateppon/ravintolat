@@ -32,8 +32,14 @@ def add_restaurant(name :str, info :str, categories : list, address : str):
         db.session.commit()
     except:
         return False
-    return True
 
+    for group in categories:
+        group_id = int(group)
+        sql = text("INSERT INTO restaurantsGroups (restauranst_id, group_id) VALUES (:restaurant_id, :group_id)")
+        db.session.execute(sql,{"restaurant_id":restaurant_id, "group_id":group_id})
+        db.session.commit()
+
+    return True
 
 def add_category(group_name : str):
     creator_id = session.get("user_id")
@@ -67,6 +73,29 @@ def get_categories():
     return categories
 
 
+def get_rest_categories(name : str):
+    sql = text("""
+               SELECT
+
+               DISTINCT
+               g.group_name
+
+               FROM restaurants as res
+               LEFT JOIN restaurantsGroups as rg
+               ON res.id = rg.restauranst_id
+
+               LEFT JOIN groups as g
+               ON rg.group_id = g.id
+
+               WHERE res.name = :name
+
+               """)
+    result = db.session.execute(sql, {"name" : name})
+    categories = result.fetchall()
+
+    return categories
+
+
 def get_restaurants():
 
     sql = text("""
@@ -80,8 +109,7 @@ def get_restaurants():
                 JOIN addresses AS addr
                 ON rest.id = addr.restaurant_id
 
-                LEFT JOIN reviews as rev
-                ON rest.id
+
 
                """)
     result = db.session.execute(sql)
@@ -126,3 +154,28 @@ def convert_result_to_dict(restaurant_list : list):
         new_list.append(rest)
 
     return new_list
+
+
+def get_restaurant(name :str):
+
+    sql = text("""
+
+                SELECT
+
+                rest.name
+                , rest.info
+                , addr.coordinates
+
+                FROM restaurants AS rest
+                JOIN addresses AS addr
+                ON rest.id = addr.restaurant_id
+
+                WHERE rest.name = :name
+
+
+               """)
+    result = db.session.execute(sql, {"name":name})
+    restaurant_info= result.fetchone()
+
+
+    return restaurant_info
