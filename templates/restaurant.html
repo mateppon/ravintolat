@@ -8,15 +8,15 @@
     {% extends "layout.html" %}
 </head>
 
-{% block title %}{{name}}{% endblock %}
+{% block title %}{{restaurant.name}}{% endblock %}
 {% block content %}
 
 <div class="container-fluid">
     <div class="row">
         <div class="col" name="restaurantsinfo">
             <div class="jumbotron">
-                <h3>{{name}}</h3>
-                <p>{{restaurant['info']}}</p>
+                <h3>{{restaurant.name}}</h3>
+                <p>{{restaurant.info}}</p>
 
                 <ul> Kuulu ravintolakategorioihin:
                     {% for category in categories %}
@@ -26,6 +26,14 @@
                 </ul>
                 {% endfor %}
 
+                <div> Arvostelujen keskiarvo: {{star_avg.star_avg}}</div>
+                <div class="row" name="rewievs">
+                    {% if session.name %}
+                    <p><a href="/review">Arvostele ravintola</a></p>
+                    {% else %}
+                    <p>Vain kirjautuneet käyttäjät voivat jättää arvosteluja. </p>
+                    {% endif %}
+                </div>
             </div>
         </div>
         <div class="col" name="map">
@@ -38,24 +46,25 @@
             </script>
         </div>
     </div>
+
     <div class="row" name="rewievs">
-        {% if session.name %}
-        <p><a href="/register">Arvostele ravintola</a></p>
-        {% else %}
-        <p>Vain kirjautuneet käyttäjät voivat jättää arvosteluja. </p>
-        {% endif %}
-    </div>
-    <div class="row" name="rewievs">
+
+
+
         <div class="list-group mx-auto">
+
+            {% for review in all_reviews %}
+
             <li class="list-group-item align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <!-- <h5 class="mb-1">Tähän otsikko</h5> -->
-                    <small>Arvosana: </small>
-                </div>
-                <p class="mb-1">Arvosteluldjwlfjnjbedfdbshjvdbsjfajfdfldsjbvbnvdb</p>
-                <small>Arvostelija</small>
-            </li>
 
+                    <small>Arvosana: {{review.stars}} </small>
+                </div>
+                <p class="mb-1">{{review.review}}</p>
+                <small> Arvion jättänyt: {{review.username}}</small>
+            </li>
+                {% endfor %}
         </div>
 
 

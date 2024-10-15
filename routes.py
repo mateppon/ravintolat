@@ -2,6 +2,7 @@ from flask import redirect, render_template, request, session
 from app import app
 import users
 import restaurants
+import reviews
 
 
 @app.route("/")
@@ -15,15 +16,19 @@ def index():
 def review():
 
     if request.method == "GET":
-        return render_template("review.html", restaurant = session.get("restaurant_name"))
+        return render_template("review.html", restaurant_name = session.get("restaurant_name"))
 
     if request.method == "POST":
-        #restaurant_id = session.get("restaurant_id")
-        #user_id = session.get("user_id")
+        restaurant_id = session.get("restaurant_id")
+        user_id = session.get("user_id")
+        restaurant_name = session.get("restaurant_name")
+
         reviewText = request.form["reviewText"]
         stars = request.form["stars"]
 
-        return redirect("/review")
+        reviews.add_review(restaurant_id, user_id, reviewText, stars)
+
+        return redirect ("/")
 
 
 @app.route("/restaurant/<name>")
@@ -36,12 +41,15 @@ def place_page(name):
     coordinates = restaurant.coordinates.split(",")
     lat = coordinates[0]
     lon = coordinates[1]
+    all_reviews = reviews.get_reviews(restaurant.id)
+    star_avg = reviews.get_avg(restaurant.id)
 
     return render_template("restaurant.html",
-                           name = name,
                             restaurant = restaurant,
                             categories = categories,
-                            lat = lat, lon = lon)
+                            lat = lat, lon = lon,
+                            all_reviews = all_reviews,
+                            star_avg = star_avg)
 
 
 @app.route("/newcategory", methods = ["GET", "POST"])

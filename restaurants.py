@@ -162,7 +162,8 @@ def get_restaurant(name :str):
 
                 SELECT
 
-                rest.name
+                rest.id
+                , rest.name
                 , rest.info
                 , addr.coordinates
 
