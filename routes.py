@@ -11,9 +11,27 @@ def index():
     return render_template("index.html", restaurants = restaurants_lst)
 
 
-@app.route('/restaurant/<name>')
+@app.route("/review", methods = ["GET", "POST"])
+def review():
+
+    if request.method == "GET":
+        return render_template("review.html", restaurant = session.get("restaurant_name"))
+
+    if request.method == "POST":
+        #restaurant_id = session.get("restaurant_id")
+        #user_id = session.get("user_id")
+        reviewText = request.form["reviewText"]
+        stars = request.form["stars"]
+
+        return redirect("/review")
+
+
+@app.route("/restaurant/<name>")
 def place_page(name):
+
     restaurant = restaurants.get_restaurant(name)
+    session["restaurant_id"] = restaurant.id
+    session["restaurant_name"] = restaurant.name
     categories= restaurants.get_rest_categories(name)
     coordinates = restaurant.coordinates.split(",")
     lat = coordinates[0]
