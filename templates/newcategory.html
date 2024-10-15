@@ -13,6 +13,7 @@
                         <input type="text" name="category" minlength="4" maxlength="20">
                     </p>
                     <input type="submit" value="Lisää kategoria">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 </form>
             </div>
             <a class="text-dark" href="/newrestaurant">Lisää uusi ravintola</a>

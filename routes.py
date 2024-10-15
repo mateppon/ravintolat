@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, abort
 from app import app
 import users
 import restaurants
@@ -19,16 +19,18 @@ def review():
         return render_template("review.html", restaurant_name = session.get("restaurant_name"))
 
     if request.method == "POST":
-        restaurant_id = session.get("restaurant_id")
-        user_id = session.get("user_id")
-        restaurant_name = session.get("restaurant_name")
+        if users.user_permission() :
+            restaurant_id = session.get("restaurant_id")
+            user_id = session.get("user_id")
+            restaurant_name = session.get("restaurant_name")
 
-        reviewText = request.form["reviewText"]
-        stars = request.form["stars"]
+            reviewText = request.form["reviewText"]
+            stars = request.form["stars"]
 
-        reviews.add_review(restaurant_id, user_id, reviewText, stars)
+            reviews.add_review(restaurant_id, user_id, reviewText, stars)
 
-        return redirect ("/")
+            return redirect ("/")
+        return render_template("error.hmtl", message = "Ei oikeutta")
 
 
 @app.route("/restaurant/<name>")
@@ -61,17 +63,18 @@ def newcategory():
 
         if request.method == "POST":
             category = request.form["category"]
+            if users.user_permission():
 
-            if restaurants.add_category(category) is False:
-                return render_template("error.html", message = "Kategoria on jo olemassa.")
+                if restaurants.add_category(category) is False:
+                    return render_template("error.html", message = "Kategoria on jo olemassa.")
 
-            return redirect("/newcategory")
+                return redirect("/newcategory")
+            return render_template("error.html", message = "Ei oikeutta.")
 
 
 @app.route("/newrestaurant", methods = ["GET", "POST"])
 def newrestaurant():
     if request.method == "GET":
-
         results = restaurants.get_categories()
         categories = []
         for row in results:
@@ -83,7 +86,6 @@ def newrestaurant():
         return render_template("newrestaurant.html", options = categories)
 
     if request.method == "POST":
-
         if request.is_json:
             data = request.json
             if 'center' in data:
@@ -94,7 +96,10 @@ def newrestaurant():
         name = request.form["name"]
         description= request.form["description"]
         categories = request.form.getlist("categories")
-        restaurants.add_restaurant(name, description, categories, address)
+
+        if users.user_permission():
+            restaurants.add_restaurant(name, description, categories, address)
+            del session["address"]
 
         return redirect("/newrestaurant")
 
@@ -118,6 +123,7 @@ def login():
 @app.route("/logout")
 def logout():
     del session["name"]
+    del session["csrf_token"]
     return redirect("/")
 
 
