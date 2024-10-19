@@ -3,18 +3,34 @@
 {% block title %}Rekisteröi uusi käyttäjä{% endblock %}
 {% block content %}
 
-
- <form action="/register" method="POST">
+</script>
+<form action="/register" method="POST" onsubmit="return check(this)">
     <h3>Rekisteröidy</h3>
     <p>Käyttäjänimi:<br>
-    <input type="text" name="name"></p>
+        <input type="text" name="name">
+    </p>
     <p>Salasana:<br>
-    <input type="password" name="password"></p>
+        <input type="password" name="password">
+    </p>
     <p>Salasana uudelleen:<br>
-        <input type="password" name="password2"></p>
+        <input type="password" name="password2">
+    </p>
     <input type="submit" value="Rekisteröidy">
 </form>
 <br>
 
+<script>
+    function check(form) {
+        if (form.name.value.length > 20 | form.name.value.length < 4) {
+            alert("Käyttäjänimen pitää olla 4-20 merkkiä pitkä.");
+            return false;
+        }
+        if (form.password.value.length > 20 | form.password.value.length < 8) {
+            alert("Salasanan pitää olla 8-20 merkkiä pitkä.");
+            return false;
+        }
+        return true;
+    }
+</script>
 
 {% endblock %}
