@@ -32,7 +32,8 @@
 	CREATE TABLE groups(
 		id SERIAL PRIMARY KEY,
 		group_name TEXT UNIQUE,
-		creator_id INTEGER REFERENCES users
+		creator_id INTEGER REFERENCES users,
+		visible BOOLEAN
 	); 
 
 	CREATE TABLE restaurantsGroups(
