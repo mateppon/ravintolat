@@ -10,7 +10,7 @@
                 <form action="/newcategory" method="POST">
                     <h3>Lisää uusi ravintolakategoria</h3>
                     <p>Kategorian nimi<br>
-                        <input type="text" name="category" minlength="4" maxlength="20">
+                        <input type="text" name="category" minlength="4" maxlength="20" >
                     </p>
                     <input type="submit" value="Lisää kategoria">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

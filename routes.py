@@ -30,7 +30,7 @@ def review():
             reviews.add_review(restaurant_id, user_id, reviewText, stars)
 
             return redirect ("/")
-        return render_template("error.hmtl", messages = ["Ei oikeutta"])
+        return render_template("error.hmtl", messages=["Ei oikeutta"], go_to="/", go_to_text="Palaa etusivulle")
 
 
 @app.route("/restaurant/<name>")
@@ -58,18 +58,27 @@ def restaurant_page(name):
 def newcategory():
         if request.method == "GET":
             categories = restaurants.get_categories()
-
             return render_template("newcategory.html", categories = categories)
 
         if request.method == "POST":
             category = request.form["category"]
-            if users.user_permission():
+            if not request.form["csrf_token"]:
+                return abort(403)
+            if users.user_permission(request.form["csrf_token"]):
+
+                if len(category) < 4 or len(category) > 20:
+                    return render_template("error.html", messages=
+                                           ["Kategorian nimen pitää olla 4-20 merkkiä pitkä"],
+                                             go_to="/newcategory", go_to_text="Palaa")
 
                 if restaurants.add_category(category) is False:
-                    return render_template("error.html", messages = ["Kategoria on jo olemassa."])
+                    return render_template("error.html", messages=
+                                           ["Kategoria on jo olemassa."],
+                                             go_to="/newcategory",
+                                             go_to_text="Palaa")
 
                 return redirect("/newcategory")
-            return render_template("error.html", messages = ["Ei oikeutta."])
+            return abort(403)
 
 
 @app.route("/newrestaurant", methods = ["GET", "POST"])
@@ -108,13 +117,16 @@ def newrestaurant():
 
             return render_template("error.html", messages=messages, go_to='/newrestaurant', go_to_text="Palaa lomakkeelle")
 
-        if users.user_permission():
+        if not request.form["csrf_token"]:
+                return abort(403)
+        if users.user_permission(request.form["csrf_token"]):
             if restaurants.add_restaurant(name, description, categories, address):
                 del session["address"]
                 return redirect("/")
             del session["address"]
-            return render_template("error.html", messages = ["Ravintola on jo olemassa."])
-
+            return render_template("error.html", messages=["Ravintola on jo olemassa."], go_to="/newrestaurant", go_to_text="Palaa lomakkeelle")
+        del session["address"]
+        return abort(403)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -129,7 +141,7 @@ def login():
             session["name"] = name
             return redirect("/")
 
-        return render_template("error.html", messages = ["Virheellinen käyttäjänimi tai salasana."])
+        return render_template("error.html", messages = ["Virheellinen käyttäjänimi tai salasana."], go_to="/", go_to_text="Palaa etusivulle")
 
 
 @app.route("/logout")
