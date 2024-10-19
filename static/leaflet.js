@@ -11,6 +11,7 @@ var geocoder = L.Control.geocoder({
     geocoder: _geocoderType
 }).addTo(map);
 
+addrr = ''
 
 geocoder.on('markgeocode', function (event) {
     var center = event.geocode.center;
@@ -22,6 +23,21 @@ geocoder.on('markgeocode', function (event) {
             data: JSON.stringify({ center: center}),
             contentType: 'application/json'
         });
+    addrr = center
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('.was-validated');
+    form.addEventListener('submit', function(e) {
+        if (addrr == '') {
+            alert("Lisää ravintola kartalle. ");
+            e.preventDefault();
+            return false;
+        }
+        alert("Ravintola on lisätty. Palaa etusivulle. ")
+        return true;
+    });
 });
 
 

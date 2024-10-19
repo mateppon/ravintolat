@@ -1,5 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Virhe sovelluksessa{% endblock %}
+
 {% block content %}
+<ul>
+{% for message in messages %}
+<li>{{ message }}</li>
 
-Virhe: {{ message }}
+{% endfor %}
+</ul>
 
+<a class="text-dark" href="{{go_to}}">{{go_to_text}}</a>
 {% endblock %}

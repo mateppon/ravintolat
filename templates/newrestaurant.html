@@ -18,20 +18,20 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <h3>Lisää uuden ravintolan tiedot</h3>
-            <form class="was-validated" action="/newrestaurant" method="POST">
+            <form class="was-validated" action="/newrestaurant" method="POST" onsubmit="return check(event,this)">
                 <div class="mb-3">
                     <label for="validationServer01">Ravintolan nimi</label>
                     <input type="text" class="form-control is-valid" id="validationServer01" name="name"
-                        placeholder="Kirjoita ravintolan nimi" required>
+                        placeholder="Kirjoita ravintolan nimi"  minlength="1" maxlength="50" required>
                     <div class="invalid-feedback">
-                        Kirjoita ravintolan nimi
+                        Anna ravintolan nimi.
                     </div>
                     <div class="mb-3">
                         <label for="validationTextarea">Kuvaus</label>
-                        <textarea class="form-control is-invalid" id="validationTextarea" name="description"
-                            placeholder="Kirjoita lyhyt kuvaus ravintolasta." required></textarea>
+                        <textarea class="form-control is-valid" id="validationTextarea" name="description"
+                            placeholder="Kirjoita lyhyt kuvaus ravintolasta." minlength="5" maxlength="500" required></textarea>
                         <div class="invalid-feedback">
-                            Kirjoita kuvaus ravintolasta.
+                            Kirjoita 5-500 merkkiä pitkä kuvaus ravintolasta.
                         </div>
                     </div>
                     <div class="mb-3">
@@ -42,7 +42,7 @@
                             </div>
                             <select class="custom-select" multiple size="3" id="validatedInputGroupSelect"
                                 name="categories" required>
-                                <option disabled selected>Valitse kategoria</option>
+                                <option disabled selected>Valitse yksi tai useampi kategoria</option>
                                 <script>
                                     function addOptions(options) {
                                         var select = document.getElementById('validatedInputGroupSelect');
@@ -55,6 +55,7 @@
                                     }
                                     addOptions({{ options | tojson }});
                                 </script>
+
                             </select>
                             <a href="/newcategory">Lisää uusi kategoria</a>
 

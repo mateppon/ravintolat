@@ -1,45 +1,42 @@
-from flask import session
+from flask import session, request, abort
 from sqlalchemy.sql import text
 from db import db
+
+
+def form_ok(address, name, description, categories):
+    if len(name) > 50 or len(name) < 1:
+        return False
+    if len(description) > 500 or len(description) < 5:
+        return False
+    if not address:
+        return False
+    return True
 
 
 def add_restaurant(name :str, info :str, categories : list, address : str):
 
     creator_id = session.get("user_id")
     visible = True
-
-    try:
-        sql = text("INSERT INTO restaurants (creator_id, name, info, visible) VALUES (:creator_id, :name, :info, :visible)")
-        db.session.execute(sql, {"creator_id":creator_id, "name":name, "info":info, "visible": visible})
-        db.session.commit()
-    except:
-        return False
-
-    try:
-
-        sql = text("SELECT id FROM restaurants WHERE name=:name")
-        result = db.session.execute(sql, {"name":name})
-        restaurant = result.fetchone()
-    except:
-        return False
-
-    restaurant_id = restaurant.id
     coordinates = f"{address['lat']},{address['lng']}"
 
     try:
+        sql = text("INSERT INTO restaurants (creator_id, name, info, visible) VALUES (:creator_id, :name, :info, :visible) RETURNING id")
+        result = db.session.execute(sql, {"creator_id":creator_id, "name":name, "info":info, "visible": visible})
+        restaurant_id = result.fetchone()[0]
+
         sql = text("INSERT INTO addresses (restaurant_id, coordinates) VALUES (:restaurant_id, :coordinates)")
         db.session.execute(sql, {"restaurant_id":restaurant_id, "coordinates":coordinates})
+
+        for group in categories:
+            group_id = int(group)
+            sql = text("INSERT INTO restaurantsGroups (restauranst_id, group_id) VALUES (:restaurant_id, :group_id)")
+            db.session.execute(sql,{"restaurant_id":restaurant_id, "group_id":group_id})
+            db.session.commit()
         db.session.commit()
     except:
         return False
-
-    for group in categories:
-        group_id = int(group)
-        sql = text("INSERT INTO restaurantsGroups (restauranst_id, group_id) VALUES (:restaurant_id, :group_id)")
-        db.session.execute(sql,{"restaurant_id":restaurant_id, "group_id":group_id})
-        db.session.commit()
-
     return True
+
 
 def add_category(group_name : str):
     creator_id = session.get("user_id")
@@ -109,8 +106,6 @@ def get_restaurants():
                 JOIN addresses AS addr
                 ON rest.id = addr.restaurant_id
 
-
-
                """)
     result = db.session.execute(sql)
     restaurant_list= result.fetchall()
@@ -123,7 +118,7 @@ def get_top5():
         """
             SELECT
 
-             rest.name
+             distinct rest.name
             , addr.coordinates
 
                 FROM restaurants AS rest
