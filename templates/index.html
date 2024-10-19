@@ -13,17 +13,72 @@
 
 {% block content %}
 
+
+
+
 <div class="container-fluid">
 
     <div class="row">
-        <div class="col-md-6">
-            {% for restaurant in restaurants %}
-            <hr>
-            {{ restaurant['name'] }}
-            <hr>
-            {% endfor %}
+        <div class="col-lg-3">
+            <div class="row">
+                <br>
+                <ul class="list-group">
+                    <h4>Parhaimmiksi arvioidut ravintolat</h4>
+                    <hr> {% for restaurant in restaurants %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <dl>
+
+
+                            <hr>
+
+                            <dt> <a class="text-dark" href="/restaurant/{{ restaurant['name'] }}">{{ restaurant['name']
+                                    }}</a></dt>
+                        </dl>
+                        <span
+                            class="badge badge-primary badge-pill bg-secondary text-white">{{restaurant['avg_stars']}}</span>
+                    </li>
+
+                    <hr>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-lg-3">
+            <div clas="row">
+                <form action="/register" method="POST">
+                    <label for="searchDescription" class="form-label">Etsi ravintolaa kuvauksen perusteella</label>
+                    <input class="form-control" type="text" placeholder="Etsittävä sana" id="searchDescription"
+                        aria-label="default input example" minlength="2" maxlength="10" required>
+                    </p>
+                    <input type="submit" value="Etsi">
+                </form>
+            </div>
+            <div class="row">
+
+                <label for="exampleDataList" class="form-label">Etsi ravintolaa nimen</label>
+                <input class="form-control" list="datalistOptions" id="exampleDataList"
+                    placeholder="Aloita kirjoittamaan...">
+                <datalist id="datalistOptions">
+                    <option value="Kiva ravintola">
+                    <option value="Toinen ravintola">
+                </datalist>
+            </div>
+            <div class="row">
+                <label for="exampleDataList" class="form-label">Etsi ravintolaa kategorian perusteella</label>
+                <input class="form-control" list="datalistOptions" id="exampleDataList"
+                    placeholder="Aloita kirjoittamaan...">
+                <datalist id="datalistOptions">
+                    <option value="Kiva ravintola">
+                    <option value="Toinen ravintola">
+                </datalist>
+
+
+            </div>
+
+
+        </div>
+
+        <div class="col-lg-6">
             <div id="map"></div>
             <script src="{{ url_for('static', filename='findrestaurants.js') }}"></script>
             <script>

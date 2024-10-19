@@ -52,6 +52,7 @@ def add_category(group_name : str):
 def get_categories():
 
     sql = text("""
+
                SELECT
                g.id
                , g.group_name
@@ -116,17 +117,40 @@ def get_restaurants():
 def get_top5():
     sql = text(
         """
+
+            WITH
+
+            revs AS(
+
+                SELECT
+
+                restaurant_id
+                , ROUND(AVG(stars),1) as stars
+
+                FROM reviews
+
+                GROUP BY 1
+
+                )
+
             SELECT
 
-             distinct rest.name
+             rest.name
             , addr.coordinates
+            , revs.stars
 
                 FROM restaurants AS rest
                 JOIN addresses AS addr
                 ON rest.id = addr.restaurant_id
 
-                LEFT JOIN reviews as rev
-                ON rest.id = rev.restaurant_id
+                LEFT JOIN revs
+                ON rest.id = revs.restaurant_id
+
+                WHERE rest.visible = True
+
+                ORDER BY revs.stars DESC
+
+                LIMIT 100
 
             """
     )
@@ -146,6 +170,7 @@ def convert_result_to_dict(restaurant_list : list):
         points = coord.split(",")
         rest["lat"] = float(points[0].replace("(", ""))
         rest["lon"] = float(points[1].replace(")", ""))
+        rest["avg_stars"] = restaurant.stars
         new_list.append(rest)
 
     return new_list
