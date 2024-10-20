@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg">
-            <div class="jumbotron justify-content-center">
+            <div class="jumbotron justify-content-center bg-light">
                 <form action="/newcategory" method="POST">
                     <h3>Lisää uusi ravintolakategoria</h3>
                     <p>Kategorian nimi<br>
@@ -23,11 +23,17 @@
                 <h4> Olemassa olevat kategoriat ja niihin kuuluvien ravintoloiden määrä:</h4>
                 <hr>
                 {% for category in categories %}
+
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <dl>
+                        <form action="/delete_category" method="POST">
+                            <input type = "hidden" name = "group_name" value = "{{ category.group_name|safe}}" />
 
-                        <dt>{{ category.group_name}}</dt>
+                            <dt >{{ category.group_name}} </dt>
+                        <button type="submit" class="btn btn-outline-danger">Poista kategoria</button>
+                        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
+                        </form>
                         <dd>Luonut: {{category.username}}</dd>
                     </dl>
                     <span class="badge badge-primary badge-pill bg-secondary text-white">tähän ravintoloiden
@@ -35,6 +41,7 @@
 
 
                 </li>
+
                 {% endfor %}
 
             </ul>

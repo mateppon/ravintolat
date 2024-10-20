@@ -16,28 +16,26 @@
 
 	CREATE TABLE addresses(
 		id SERIAL PRIMARY KEY,
-		restaurant_id INTEGER REFERENCES restaurants,
+		restaurant_id INTEGER REFERENCES restaurants ON DELETE CASCADE,
 		coordinates TEXT		
 	);
 
 	CREATE TABLE reviews(
 		id SERIAL PRIMARY KEY,
-		restaurant_id INTEGER REFERENCES restaurants,
+		restaurant_id INTEGER REFERENCES restaurants ON DELETE CASCADE,
 		reviewer_id INTEGER REFERENCES users, 
 		review TEXT,
-		stars INTEGER,
-		visible BOOLEAN
+		stars INTEGER
 	);
 
 	CREATE TABLE groups(
 		id SERIAL PRIMARY KEY,
 		group_name TEXT UNIQUE,
-		creator_id INTEGER REFERENCES users,
-		visible BOOLEAN
+		creator_id INTEGER REFERENCES users
 	); 
 
 	CREATE TABLE restaurantsGroups(
 		id SERIAL PRIMARY KEY,
-		restauranst_id INTEGER REFERENCES restaurants,
-		group_id INTEGER REFERENCES groups
+		restauranst_id INTEGER REFERENCES restaurants ON DELETE CASCADE,
+		group_id INTEGER REFERENCES groups ON DELETE CASCADE
 	);

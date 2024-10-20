@@ -7,10 +7,31 @@ import reviews
 
 @app.route("/")
 def index():
-    if request.method == "GET":
         restaurants_lst = restaurants.get_top5()
         return render_template("index.html",
                            restaurants=restaurants_lst)
+
+@app.route("/adminpage")
+def adminpage():
+    if not users.is_admin():
+        return redirect("/")
+    return render_template("adminpage.html")
+
+
+@app.route("/delete_category", methods= ["POST"])
+def delete_category():
+    if not users.is_admin():
+        return redirect("/")
+
+    if not request.form["csrf_token"]:
+        return render_template("error.html", messages=[
+            "Kirjadu sisään ylläpitäjänä"], go_to="/register", go_to_text="Kirjaudu")
+
+    if users.user_permission(request.form["csrf_token"]):
+        category = request.form["group_name"]
+        restaurants.delete_category(category)
+        return redirect("/newcategory")
+    return abort(403)
 
 
 @app.route("/results", methods = ["POST"])
@@ -72,6 +93,9 @@ def restaurant_page(name):
 @app.route("/newcategory", methods = ["GET", "POST"])
 def newcategory():
         if request.method == "GET":
+            if not users.is_admin():
+                return redirect("/")
+
             categories = restaurants.get_categories()
             return render_template("newcategory.html", categories = categories)
 
@@ -155,6 +179,8 @@ def login():
 
         if users.credentials_exists(name, password):
             session["name"] = name
+            if session.get("user_role") == 2:
+                return render_template("adminpage.html")
             return redirect("/")
 
         return render_template("error.html", messages=
@@ -168,6 +194,7 @@ def logout():
     if not session.get("csrf_token"):
         return redirect("/")
     del session["csrf_token"]
+    del session["user_role"]
     return redirect("/")
 
 

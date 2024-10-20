@@ -16,12 +16,11 @@ def form_ok(address, name, description, categories):
 def add_restaurant(name :str, info :str, categories : list, address : str):
 
     creator_id = session.get("user_id")
-    visible = True
     coordinates = f"{address['lat']},{address['lng']}"
 
     try:
-        sql = text("INSERT INTO restaurants (creator_id, name, info, visible) VALUES (:creator_id, :name, :info, :visible) RETURNING id")
-        result = db.session.execute(sql, {"creator_id":creator_id, "name":name, "info":info, "visible": visible})
+        sql = text("INSERT INTO restaurants (creator_id, name, info) VALUES (:creator_id, :name, :info) RETURNING id")
+        result = db.session.execute(sql, {"creator_id":creator_id, "name":name, "info":info})
         restaurant_id = result.fetchone()[0]
 
         sql = text("INSERT INTO addresses (restaurant_id, coordinates) VALUES (:restaurant_id, :coordinates)")
@@ -67,6 +66,9 @@ def get_categories():
                """)
     result = db.session.execute(sql)
     categories = result.fetchall()
+    for c in categories:
+        print(c)
+
 
     return categories
 
@@ -82,7 +84,7 @@ def get_rest_categories(name : str):
                LEFT JOIN restaurantsGroups as rg
                ON res.id = rg.restauranst_id
 
-               LEFT JOIN groups as g
+               JOIN groups as g
                ON rg.group_id = g.id
 
                WHERE res.name = :name
@@ -128,7 +130,6 @@ def get_top5():
                 , ROUND(AVG(stars),1) as stars
 
                 FROM reviews
-                WHERE visible = True
 
                 GROUP BY 1
 
@@ -146,8 +147,6 @@ def get_top5():
 
                 LEFT JOIN revs
                 ON rest.id = revs.restaurant_id
-
-                WHERE rest.visible = True
 
                 ORDER BY stars DESC
 
@@ -177,7 +176,7 @@ def convert_result_to_dict(restaurant_list : list):
     return new_list
 
 
-def get_restaurant(name :str):
+def get_restaurant(name : str):
 
     sql = text("""
 
@@ -202,7 +201,7 @@ def get_restaurant(name :str):
 
     return restaurant_info
 
-def search_word(word):
+def search_word(word : str):
     sql = text(
         """
           WITH
@@ -215,7 +214,6 @@ def search_word(word):
                 , ROUND(AVG(stars),1) as stars
 
                 FROM reviews
-                WHERE visible = True
 
                 GROUP BY 1
 
@@ -234,8 +232,7 @@ def search_word(word):
                 LEFT JOIN revs
                 ON rest.id = revs.restaurant_id
 
-                WHERE rest.visible = True
-                AND info ILIKE :word
+                WHERE info ILIKE :word
 
                 ORDER BY stars DESC
 
@@ -246,3 +243,17 @@ def search_word(word):
     restaurant_list= result.fetchall()
 
     return convert_result_to_dict(restaurant_list)
+
+
+def delete_category(category : str):
+    sql= text(
+
+    """
+    DELETE FROM groups
+    WHERE group_name = :group_name
+
+    """
+    )
+    db.session.execute(sql,{ "group_name":category})
+    db.session.commit()
+
