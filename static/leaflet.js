@@ -35,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             return false;
         }
-        alert("Ravintola on lisätty. Palaa etusivulle. ")
         return true;
     });
 });
