@@ -5,18 +5,26 @@
     <title>Ravintolat kartalla - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
-
 <body>
     <header>
         <nav class="navbar-expand-lg navbar-dark bg-dark">
 
-            <div class="container-fluid border text-white ">
+            <div class="container-fluid border text-light ">
                 <div class="row align-items-start">
-                    <div class="col-auto mr-auto my-3" >
-                        <h2>Ravintolat kartalla</h2>
+                    <div class="col-auto mr-auto my-3">
+                        <a class="navbar-brand" href="/">Ravintolat kartalla</a>
+                        {% if session.user_role %}
+                        {% if session.user_role == 2 %}
+
+                        <a href="/newrestaurant" class="btn btn-info" role="button">Lisää uusi ravintola</a>
+                        <a href="/allrestaurants" class="btn btn-info" role="button">Poista ravintola</a>
+                        <a href="/newcategory" class="btn btn-info" role="button">Lisää tai poista ravintolakategoria</a>
+                        {% endif%}
+                        {% endif %}
+
                     </div>
 
-                    <div class="col-auto my-3" >
+                    <div class="col-auto my-3">
                         {% if session.name %}
                         <p>Olet kirjautunut nimellä {{ session.name }}</p>
                         <a href="/logout">Kirjaudu ulos</a>
@@ -40,10 +48,5 @@
 
         {% block content %}{% endblock %}
 
-        <div class="container-fluid border">
-            <div class="row align-items-end">
-                <a class= "text-dark" href="/">Palaa etusivulle</a>
-            </div>
-        </div>
-    </main>
 </body>
+

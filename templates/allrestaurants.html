@@ -12,7 +12,7 @@
         <li class="list-group-item d-flex justify-content-between align-items-center">
             <dl class="align-items-center">
                 <form action="/delete_restaurants" method="POST">
-                    <input type = "hidden" name = "group_name" value = "{{ restaurant.id|safe}}" />
+                    <input type = "hidden" name = "name" value = "{{ restaurant.id|safe}}" />
 
                     <dt >{{ restaurant.name}} </dt>
                 <button type="submit" class="btn btn-outline-danger">Poista ravintola</button>

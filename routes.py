@@ -48,7 +48,11 @@ def delete_restaurants():
     if users.user_permission(request.form["csrf_token"]):
         restaurant = request.form["name"]
         restaurants.delete_restaurant(restaurant)
-        return redirect("/allrestaurants")
+        if session.get("restaurant_name"):
+            del session["restaurant_name"]
+        if session.get("restaurant_id"):
+            del session["restaurant_id"]
+        return redirect("/")
     return abort(403)
 
 
@@ -228,8 +232,6 @@ def login():
 
         if users.credentials_exists(name, password):
             session["name"] = name
-            if session.get("user_role") == 2:
-                return render_template("adminpage.html")
             return redirect("/")
 
         return render_template("error.html", messages=

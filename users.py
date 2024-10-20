@@ -5,9 +5,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from db import db
 
 
-def user_permission():
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+def user_permission(form_token):
+        if session.get("csrf_token") != form_token:
             return False
         return True
 
@@ -38,6 +37,12 @@ def credentials_exists(name, password):
 
     if not user:
         return False
+
+    if user.role == 2:
+        session["csrf_token"] = secrets.token_hex(16)
+        session["user_role"] = user.role
+        session["user_id"] = user.id
+        return True
 
     hash_value = user.password
 
