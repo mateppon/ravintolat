@@ -16,7 +16,6 @@
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 </form>
             </div>
-            <a class="text-dark" href="/newrestaurant">Lisää uusi ravintola</a>
         </div>
         <div class="col-lg">
             <ul class="list-group">
@@ -36,8 +35,8 @@
                         </form>
                         <dd>Luonut: {{category.username}}</dd>
                     </dl>
-                    <span class="badge badge-primary badge-pill bg-secondary text-white">tähän ravintoloiden
-                        määrä</span>
+                    <span class="badge badge-primary badge-pill bg-secondary text-white"> {{category.restaurant_count}}
+                        </span>
 
 
                 </li>

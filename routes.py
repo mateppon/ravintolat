@@ -144,7 +144,8 @@ def newcategory():
         if not users.is_admin():
             return redirect("/")
 
-        categories = restaurants.get_categories()
+       # categories = restaurants.get_categories()
+        categories = restaurants.count_groups()
         return render_template("newcategory.html", categories = categories)
 
     if request.method == "POST":

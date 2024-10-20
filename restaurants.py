@@ -265,3 +265,42 @@ def delete_restaurant(restaurant_id : int):
     )
     db.session.execute(sql,{ "id":restaurant_id})
     db.session.commit()
+
+def count_groups():
+    sql = text(
+        """
+        WITH
+
+        grouped AS(
+
+            SELECT
+            DISTINCT g.id
+            , COUNT(DISTINCT Restauranst_id) AS restaurant_count
+
+            FROM groups AS g
+            LEFT JOIN restaurantsGroups AS rg
+            ON rg.group_id = g.id
+
+            GROUP BY 1
+        )
+
+        SELECT
+
+        group_name
+        , restaurant_count
+        , u.name AS username
+
+        FROM grouped AS gp
+        LEFT JOIN groups
+        ON gp.id = groups.id
+
+        LEFT JOIN users AS u
+        ON groups.creator_id = u.id
+
+
+            """
+    )
+    result = db.session.execute(sql)
+    restaurant_list= result.fetchall()
+
+    return restaurant_list
