@@ -5,6 +5,12 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+<style>
+
+
+</style>
+
+
     {% extends "layout.html" %}
 </head>
 
@@ -22,7 +28,7 @@
         <div class="col-lg-3">
             <br>
             <ul class="list-group">
-                <h4>Parhaimmiksi arvioidut ravintolat</h4>
+                <h4>Parhaiksi arvioidut ravintolat</h4>
                 <hr> {% for restaurant in restaurants %}
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <dl>
@@ -39,13 +45,13 @@
             </ul>
         </div>
         <div class="col-lg-3">
-            <div class="jumbotron bg-light" id="searchjumbotron">
+            <div class="jumbotron text-center" id="searchjumbotron">
                 <form action="/results" method="POST">
-                    <label for="searchDescription" class="form-label">Etsi ravintolaa kuvauksen perusteella</label>
+                    <label for="searchDescription" class="form-label"id="searchlabel">Etsi ravintolaa kuvauksen perusteella</label>
                     <input class="form-control" type="text" placeholder="Etsittävä sana" id="searchDescription"
-                        aria-label="default input example" minlength="2" maxlength="20" name="description" required>
+                        aria-label="default input example" minlength="2" maxlength="20" name="description"  required>
                     </p>
-                    <input type="submit" value="Etsi">
+                    <input type="submit" value="Etsi ravintola" class="btn btn-dark ">
                 </form>
             </div>
         </div>
