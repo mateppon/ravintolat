@@ -1,23 +1,30 @@
+<head>
 {% extends "layout.html" %}
+<style>
 
+</style>
+
+</head>
 {% block title %}Rekisteröi uusi käyttäjä{% endblock %}
 {% block content %}
-
-</script>
-<form action="/register" method="POST" onsubmit="return check(this)">
-    <h3>Rekisteröidy</h3>
-    <p>Käyttäjänimi:<br>
-        <input type="text" name="name">
-    </p>
-    <p>Salasana:<br>
-        <input type="password" name="password">
-    </p>
-    <p>Salasana uudelleen:<br>
-        <input type="password" name="password2">
-    </p>
-    <input type="submit" value="Rekisteröidy">
-</form>
-<br>
+<div class="container-sm ">
+    <div class="jumbotron text-center text-dark">
+        <form class="justify-content-center" action="/register" method="POST" onsubmit="return check(this)">
+            <h3>Rekisteröidy</h3>
+            <p>Käyttäjänimi:<br>
+                <input type="text" name="name">
+            </p>
+            <p>Salasana:<br>
+                <input type="password" name="password">
+            </p>
+            <p>Salasana uudelleen:<br>
+                <input type="password" name="password2">
+            </p>
+            <input type="submit" value="Rekisteröidy">
+        </form>
+        <br>
+    </div>
+</div>
 
 <script>
     function check(form) {
