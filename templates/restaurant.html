@@ -36,7 +36,7 @@
                 </div>
                 {% if session.user_role == 2 %}
                 <form action="/delete_restaurants" method="POST">
-                    <input type = "hidden" name = "group_name" value = "{{ restaurant.id|safe}}" />
+                    <input type = "hidden" name = "name" value = "{{ restaurant.id|safe}}" />
                 <button type="submit" class="btn btn-outline-danger">Poista ravintola</button>
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
@@ -72,6 +72,16 @@
                 </div>
                 <p class="mb-1">{{review.review}}</p>
                 <small> Arvion jättänyt: {{review.username}}</small>
+                {% if session.user_role == 2 %}
+                <form action="/delete_review" method="POST">
+                    <input type = "hidden" name = "review_id" value = "{{ review.id|safe}}" />
+                <button type="submit" class="btn btn-outline-danger">Poista arvostelu</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
+                </form>
+
+                {% endif %}
+
             </li>
                 {% endfor %}
         </div>

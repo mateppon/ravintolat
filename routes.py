@@ -11,6 +11,23 @@ def index():
     return render_template("index.html",
                            restaurants=restaurants_lst)
 
+
+@app.route("/delete_review", methods= ["POST"])
+def delete_review():
+    if not users.is_admin():
+        return redirect("/")
+
+    if not request.form["csrf_token"]:
+        return render_template("error.html", messages=[
+            "Kirjadu sisään ylläpitäjänä"], go_to="/register", go_to_text="Kirjaudu")
+
+    if users.user_permission(request.form["csrf_token"]):
+        review_id = request.form["review_id"]
+        reviews.delete_review(review_id)
+        return redirect("/")
+    return abort(403)
+
+
 @app.route("/allrestaurants")
 def allrestaurants():
     if not users.is_admin():
@@ -29,7 +46,7 @@ def delete_restaurants():
             "Kirjadu sisään ylläpitäjänä"], go_to="/register", go_to_text="Kirjaudu")
 
     if users.user_permission(request.form["csrf_token"]):
-        restaurant = request.form["group_name"]
+        restaurant = request.form["name"]
         restaurants.delete_restaurant(restaurant)
         return redirect("/allrestaurants")
     return abort(403)

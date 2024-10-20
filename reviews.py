@@ -3,6 +3,28 @@ from sqlalchemy.sql import text
 from db import db
 
 
+def review_ok(review_text : str, stars):
+    if not stars:
+        return False
+    if len(review_text) < 2 or len(review_text) > 1000:
+        return False
+    return True
+
+
+def delete_review(review_id):
+    sql= text(
+
+    """
+    DELETE FROM reviews
+    WHERE id = :id
+
+    """
+    )
+    db.session.execute(sql,{ "id":review_id})
+    db.session.commit()
+
+
+
 def get_reviews(restaurant_id : int):
 
     sql = text("""
@@ -13,14 +35,12 @@ def get_reviews(restaurant_id : int):
                , u.name as username
                , rev.review
                , rev.stars
-               , rev.visible
 
                FROM reviews as rev
                LEFT JOIN users as u
                ON rev.reviewer_id = u.id
 
                WHERE rev.restaurant_id = :restaurant_id
-               AND rev.visible = True
 
                """)
     result = db.session.execute(sql, {"restaurant_id":restaurant_id})
@@ -34,21 +54,21 @@ def add_review(restaurant_id : int, reviewer_id : int, review: str, stars:int):
     if session.get("user_id"):
         print(session.get("user_id"))
 
-        visible = True
-
         sql = text("""
                    INSERT INTO reviews
-                   (restaurant_id, reviewer_id, review, stars, visible)
+                   (restaurant_id, reviewer_id, review, stars)
 
                    VALUES
-                   (:restaurant_id, :reviewer_id, :review, :stars, :visible)
+                   (:restaurant_id, :reviewer_id, :review, :stars)
                    """)
-        db.session.execute(sql, {"restaurant_id":restaurant_id, "reviewer_id":reviewer_id, "review":review, "stars":stars, "visible": visible})
+        db.session.execute(sql, {"restaurant_id":restaurant_id,
+                                 "reviewer_id":reviewer_id,
+                                 "review":review, "stars":stars})
         db.session.commit()
 
     else:
         print("vain kirjautuneet voivat jättää arvosteluja")
-        print(session.get("user_id"))
+
 
 
 def get_avg(restaurant_id : int):
@@ -60,11 +80,9 @@ def get_avg(restaurant_id : int):
                FROM reviews as rev
 
                WHERE rev.restaurant_id = :restaurant_id
-               AND rev.visible = True
 
                """)
     result = db.session.execute(sql, {"restaurant_id":restaurant_id})
     reviews = result.fetchone()
-
 
     return reviews
