@@ -11,61 +11,54 @@
 {% block title %}{{restaurant.name}}{% endblock %}
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col" name="restaurantsinfo">
-            <div class="jumbotron">
-                <h3>{{restaurant.name}}</h3>
-                <p>{{restaurant.info}}</p>
-
-                <ul> Kuulu ravintolakategorioihin:
-                    {% for category in categories %}
-                    <li>
-                        {{category.group_name}}
-                    </li>
-                </ul>
-                {% endfor %}
-
-                <div> Arvostelujen keskiarvo: {{star_avg.star_avg}}</div>
-                <div class="row" name="rewievs">
-                    {% if session.name %}
-                    <p><a href="/review">Arvostele ravintola</a></p>
-                    {% else %}
-                    <p>Vain kirjautuneet käyttäjät voivat jättää arvosteluja. </p>
-                    {% endif %}
-                </div>
-                {% if session.user_role == 2 %}
-                <form action="/delete_restaurants" method="POST">
-                    <input type = "hidden" name = "name" value = "{{ restaurant.id|safe}}" />
+<div class="container-sm">
+    <div class="row justify-content-center" name="restaurantsinfo" id = "restaurantsinfo">
+        <div class="jumbotron " id="infojumbotron">
+            <h3>{{restaurant.name}}</h3>
+            <p>{{restaurant.info}}</p>
+            <ul> Kuulu ravintolakategorioihin:
+                {% for category in categories %}
+                <li>
+                    {{category.group_name}}
+                </li>
+            </ul>
+            {% endfor %}
+            <div> Arvostelujen keskiarvo: {{star_avg.star_avg}}</div>
+            <div class="row" name="rewievs">
+                {% if session.name %}
+                <p><a href="/review">Arvostele ravintola</a></p>
+                {% else %}
+                <p>Vain kirjautuneet käyttäjät voivat jättää arvosteluja. </p>
+                {% endif %}
+            </div>
+            {% if session.user_role == 2 %}
+            <form action="/delete_restaurants" method="POST">
+                <input type="hidden" name="name" value="{{ restaurant.id|safe}}" />
                 <button type="submit" class="btn btn-outline-danger">Poista ravintola</button>
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
-                </form>
+            </form>
 
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
-        <div class="col" name="map">
-            <div id="map"></div>
-            <script src="{{ url_for('static', filename='findrestaurants.js') }}"></script>
-            <script>
-                L.marker([{{ lat }}, {{ lon }}])
-                    .addTo(map)
-                    .bindPopup("{{restaurant.name}}").openPopup();
-            </script>
-        </div>
+    </div>
+    <div class="row" name="map">
+        <div id="map"></div>
+        <script src="{{ url_for('static', filename='findrestaurants.js') }}"></script>
+        <script>
+            L.marker([{{ lat }}, {{ lon }}])
+                .addTo(map)
+                .bindPopup("{{restaurant.name}}").openPopup();
+        </script>
     </div>
 
     <div class="row" name="rewievs">
-
-
-
-        <div class="list-group mx-auto">
+        <div class="list-group mx-auto"id ="reviewsall">
 
             {% for review in all_reviews %}
 
             <li class="list-group-item align-items-start">
-                <div class="d-flex w-100 justify-content-between">
+                <div class="justify-content-between">
                     <!-- <h5 class="mb-1">Tähän otsikko</h5> -->
 
                     <small>Arvosana: {{review.stars}} </small>
@@ -74,16 +67,16 @@
                 <small> Arvion jättänyt: {{review.username}}</small>
                 {% if session.user_role == 2 %}
                 <form action="/delete_review" method="POST">
-                    <input type = "hidden" name = "review_id" value = "{{ review.id|safe}}" />
-                <button type="submit" class="btn btn-outline-danger">Poista arvostelu</button>
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <input type="hidden" name="review_id" value="{{ review.id|safe}}" />
+                    <button type="submit" class="btn btn-outline-danger">Poista arvostelu</button>
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
                 </form>
 
                 {% endif %}
 
             </li>
-                {% endfor %}
+            {% endfor %}
         </div>
 
 
