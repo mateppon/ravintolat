@@ -7,10 +7,20 @@ import reviews
 
 @app.route("/")
 def index():
-    restaurants_lst = restaurants.get_top5()
+    if request.method == "GET":
+        restaurants_lst = restaurants.get_top5()
+        return render_template("index.html",
+                           restaurants=restaurants_lst)
 
-    return render_template("index.html",
-                           restaurants = restaurants_lst)
+
+@app.route("/results", methods = ["POST"])
+def results():
+    word = request.form["description"]
+    if len(word) < 1 or len(word) > 10:
+        render_template("error.html", messages = ["Etsittävän sanan tulee olla 1-20 merkkiä pitkä."])
+    restaurants_lst = restaurants.search_word(word)
+
+    return render_template("results.html", restaurants=restaurants_lst, word= word)
 
 
 @app.route("/review", methods = ["GET", "POST"])
@@ -127,7 +137,7 @@ def newrestaurant():
         if users.user_permission(request.form["csrf_token"]):
             if restaurants.add_restaurant(name, description, categories, address):
                 del session["address"]
-                return render_template("index.html")
+                return redirect("/")
             del session["address"]
             return render_template("error.html", messages=["Ravintola on jo olemassa."], go_to="/newrestaurant", go_to_text="Palaa lomakkeelle")
         del session["address"]

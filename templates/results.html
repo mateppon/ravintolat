@@ -1,0 +1,97 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='findrestaurant.css') }}" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    {% extends "layout.html" %}
+</head>
+
+{% block title %}Hakutulokset{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-6">
+                <br>
+                <ul class="list-group">
+                    <h4>Hakusanalla {{word}} löytyi seuraavat ravintolat</h4>
+                    <hr> {% for restaurant in restaurants %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <dl>
+
+
+                            <hr>
+
+                            <dt> <a class="text-dark" href="/restaurant/{{ restaurant['name'] }}">{{ restaurant['name']
+                                    }}</a></dt>
+                        </dl>
+                        <span
+                            class="badge badge-primary badge-pill bg-secondary text-white">{{restaurant['avg_stars']}}</span>
+                    </li>
+
+                    <hr>
+                    {% endfor %}
+                </ul>
+
+        </div>
+        <!-- <div class="col-lg-3">
+            <div clas="row">
+                <form action="/register" method="POST">
+                    <label for="searchDescription" class="form-label">Etsi ravintolaa kuvauksen perusteella</label>
+                    <input class="form-control" type="text" placeholder="Etsittävä sana" id="searchDescription"
+                        aria-label="default input example" minlength="2" maxlength="10" required>
+                    </p>
+                    <input type="submit" value="Etsi">
+                </form>
+            </div>
+            <div class="row">
+
+                <label for="exampleDataList" class="form-label">Etsi ravintolaa nimen</label>
+                <input class="form-control" list="datalistOptions" id="exampleDataList"
+                    placeholder="Aloita kirjoittamaan...">
+                <datalist id="datalistOptions">
+                    <option value="Kiva ravintola">
+                    <option value="Toinen ravintola">
+                </datalist>
+            </div>
+            <div class="row">
+                <label for="exampleDataList" class="form-label">Etsi ravintolaa kategorian perusteella</label>
+                <input class="form-control" list="datalistOptions" id="exampleDataList"
+                    placeholder="Aloita kirjoittamaan...">
+                <datalist id="datalistOptions">
+                    <option value="Kiva ravintola">
+                    <option value="Toinen ravintola">
+                </datalist>
+
+
+            </div>
+
+
+        </div>
+ -->
+        <div class="col-lg-6">
+            <div id="map"></div>
+            <script src="{{ url_for('static', filename='findrestaurants.js') }}"></script>
+            <script>
+                {% for restaurant in restaurants %}
+
+                var popup = L.popup()
+                    .setContent('<a href="/restaurant/{{restaurant['name']}}" class="restaurant-link">{{restaurant['name']}}</a>')
+
+                L.marker([{{ restaurant['lat'] }}, {{ restaurant['lon'] }}])
+                    .addTo(map)
+                    .bindPopup(popup).openPopup();
+                {% endfor %}
+            </script>
+        </div>
+    </div>
+    <div class="row">
+        <a class="text-dark" href="/newrestaurant">Lisää uusi ravintola</a>
+    </div>
+</div>
+{% endblock %}
+
+

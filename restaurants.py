@@ -128,16 +128,17 @@ def get_top5():
                 , ROUND(AVG(stars),1) as stars
 
                 FROM reviews
+                WHERE visible = True
 
                 GROUP BY 1
 
-                )
+            )
 
             SELECT
 
              rest.name
             , addr.coordinates
-            , revs.stars
+            , CASE WHEN stars IS NULL THEN 0.0::float ELSE stars END as stars
 
                 FROM restaurants AS rest
                 JOIN addresses AS addr
@@ -148,7 +149,7 @@ def get_top5():
 
                 WHERE rest.visible = True
 
-                ORDER BY revs.stars DESC
+                ORDER BY stars DESC
 
                 LIMIT 100
 
@@ -200,3 +201,48 @@ def get_restaurant(name :str):
 
 
     return restaurant_info
+
+def search_word(word):
+    sql = text(
+        """
+          WITH
+
+            revs AS(
+
+                SELECT
+
+                restaurant_id
+                , ROUND(AVG(stars),1) as stars
+
+                FROM reviews
+                WHERE visible = True
+
+                GROUP BY 1
+
+            )
+
+            SELECT
+
+             rest.name
+            , addr.coordinates
+            , CASE WHEN stars IS NULL THEN 0.0::float ELSE stars END as stars
+
+                FROM restaurants AS rest
+                JOIN addresses AS addr
+                ON rest.id = addr.restaurant_id
+
+                LEFT JOIN revs
+                ON rest.id = revs.restaurant_id
+
+                WHERE rest.visible = True
+                AND info ILIKE :word
+
+                ORDER BY stars DESC
+
+            """
+    )
+    word = f"%{word}%"
+    result = db.session.execute(sql, {"word":word} )
+    restaurant_list= result.fetchall()
+
+    return convert_result_to_dict(restaurant_list)
