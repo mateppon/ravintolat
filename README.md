@@ -1,13 +1,13 @@
 # Ravintolat
 Sovelluksessa näkyy tietyn alueen ravintolat, joista voi etsiä tietoa ja lukea arvioita. Jokainen käyttäjä on peruskäyttäjä tai ylläpitäjä.
  * Käyttäjä voi kirjautua sisään ja ulos sekä luoda uuden tunnuksen. TOTEUTETTU
- * Käyttäjä näkee ravintolat kartalla ja voi painaa ravintolasta, jolloin siitä näytetään lisää tietoa (kuten kuvaus ja aukioloajat).
- * Käyttäjä voi antaa arvion (tähdet ja kommentti) ravintolasta ja lukea muiden antamia arvioita.
+ * Käyttäjä näkee ravintolat kartalla ja voi painaa ravintolasta, jolloin siitä näytetään lisää tietoa (kuten kuvaus, kategoriat, sijainti ja arviot).TOTEUTETTU
+ * Kirjautunut käyttäjä voi antaa arvion (tähdet ja kommentti) ravintolasta ja kaikki käyttäjät voivat lukea muiden antamia arvioita.TOTEUTETTU
  * Ylläpitäjä voi lisätä ja poistaa ravintoloita sekä määrittää ravintolasta näytettävät tiedot. TOTEUTETTU OSITTAIN - Tällä hetkellä kaikki käyttäjät voivat lisätä ravintoloita sovellukseen.
- * Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa on annettu sana.
- * Käyttäjä näkee myös listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.
+ * Käyttäjä voi etsiä kaikki ravintolat, joiden kuvauksessa on annettu sana.TOTEUTETTU
+ * Käyttäjä näkee myös listan, jossa ravintolat on järjestetty parhaimmasta huonoimpaan arvioiden mukaisesti.TOTEUTETTU
  * Ylläpitäjä voi tarvittaessa poistaa käyttäjän antaman arvion.
- * Ylläpitäjä voi luoda ryhmiä, joihin ravintoloita voi luokitella. Ravintola voi kuulua yhteen tai useampaan ryhmään.
+ * Ylläpitäjä voi luoda ryhmiä, joihin ravintoloita voi luokitella. Ravintola voi kuulua yhteen tai useampaan ryhmään.TOTEUTTETTU
 
 
 
