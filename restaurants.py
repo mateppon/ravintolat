@@ -1,4 +1,4 @@
-from flask import session, request, abort
+from flask import session
 from sqlalchemy.sql import text
 from db import db
 
@@ -66,9 +66,6 @@ def get_categories():
                """)
     result = db.session.execute(sql)
     categories = result.fetchall()
-    for c in categories:
-        print(c)
-
 
     return categories
 
@@ -101,19 +98,19 @@ def get_restaurants():
     sql = text("""
 
                 SELECT
+                rest.id
+                ,rest.name
+               , u.name AS username
 
-                rest.name
-                , addr.coordinates
-
-                FROM restaurants AS rest
-                JOIN addresses AS addr
-                ON rest.id = addr.restaurant_id
+               FROM restaurants AS rest
+               LEFT JOIN users as u
+               ON u.id = rest.creator_id
 
                """)
     result = db.session.execute(sql)
     restaurant_list= result.fetchall()
 
-    return convert_result_to_dict(restaurant_list)
+    return restaurant_list
 
 
 def get_top5():
@@ -257,3 +254,14 @@ def delete_category(category : str):
     db.session.execute(sql,{ "group_name":category})
     db.session.commit()
 
+def delete_restaurant(restaurant_id : int):
+    sql= text(
+
+    """
+    DELETE FROM restaurants
+    WHERE id = :id
+
+    """
+    )
+    db.session.execute(sql,{ "id":restaurant_id})
+    db.session.commit()

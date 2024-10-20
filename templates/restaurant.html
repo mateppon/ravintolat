@@ -34,6 +34,15 @@
                     <p>Vain kirjautuneet käyttäjät voivat jättää arvosteluja. </p>
                     {% endif %}
                 </div>
+                {% if session.user_role == 2 %}
+                <form action="/delete_restaurants" method="POST">
+                    <input type = "hidden" name = "group_name" value = "{{ restaurant.id|safe}}" />
+                <button type="submit" class="btn btn-outline-danger">Poista ravintola</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
+                </form>
+
+                {% endif %}
             </div>
         </div>
         <div class="col" name="map">

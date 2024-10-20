@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+
+{% block title %}Kaikki ravintlat{% endblock %}
+
+{% block content %}
+<div class= "container-sm align-items-center">
+    <ul class="list-group">
+        <h4> Kaikki soveluksessa olevat ravintolat</h4>
+        <hr>
+        {% for restaurant in restaurants %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <dl class="align-items-center">
+                <form action="/delete_restaurants" method="POST">
+                    <input type = "hidden" name = "group_name" value = "{{ restaurant.id|safe}}" />
+
+                    <dt >{{ restaurant.name}} </dt>
+                <button type="submit" class="btn btn-outline-danger">Poista ravintola</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+
+                </form>
+                <dd>Luonut: {{restaurant.username}}</dd>
+            </dl>
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+
+
+</div>
+
+
+
+{% endblock %}
