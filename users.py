@@ -39,10 +39,11 @@ def credentials_exists(name, password):
         return False
 
     if user.role == 2:
-        session["csrf_token"] = secrets.token_hex(16)
-        session["user_role"] = user.role
-        session["user_id"] = user.id
-        return True
+        if user.password == password:
+            session["csrf_token"] = secrets.token_hex(16)
+            session["user_role"] = user.role
+            session["user_id"] = user.id
+            return True
 
     hash_value = user.password
 
